@@ -4,6 +4,7 @@ import json
 from pyquery import PyQuery as pq
 from bs4 import BeautifulSoup
 import pymongo
+from redis import StrictRedis
 
 def writetoMongo(item):
     client = pymongo.MongoClient(host='localhost',port=27017)
