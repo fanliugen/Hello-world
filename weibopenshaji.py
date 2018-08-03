@@ -3,7 +3,13 @@ import re
 import json
 from pyquery import PyQuery as pq
 from bs4 import BeautifulSoup
-import string
+import pymongo
+
+def writetoMongo(item):
+    client = pymongo.MongoClient(host='localhost',port=27017)
+    db=client['penshaji']
+    collection = db.sheet
+    result = collection.insert_one(item)
 
 def get_one_page(url):
     response = requests.get(url)
@@ -47,8 +53,13 @@ def main(page):
     items=parse_one_page(html)
     for item in items:
         # print(item)
-        with open('penshaji.txt','a',encoding='utf-8') as file:
-            file.write(json.dumps(item,ensure_ascii=False)+'\n')
+        #save to file 方法
+        # with open('penshaji.txt','a',encoding='utf-8') as file:
+        #     file.write(json.dumps(item,ensure_ascii=False)+'\n')
+
+        #save to mongodb
+        writetoMongo(item)
+
     # print(html)
     # with open('html','a',encoding='utf-8') as file:
     #     file.write(html)
