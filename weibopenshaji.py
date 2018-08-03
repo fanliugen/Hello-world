@@ -58,7 +58,7 @@ def main(page):
         # with open('penshaji.txt','a',encoding='utf-8') as file:
         #     file.write(json.dumps(item,ensure_ascii=False)+'\n')
 
-        #save to mongodb
+        #save to mongodb方法 
         writetoMongo(item)
 
     # print(html)
