@@ -1,3 +1,4 @@
+#Python中3种方式定义类方法, 常规方式, @classmethod修饰方式, @staticmethod修饰方式.
 class A(object):
 
     #self和cls的区别不是强制的，只是PEP8中一种编程风格，
