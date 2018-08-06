@@ -56,7 +56,7 @@ def article_writeToMongo(item):
 
 def parse_detail_page(html):
     doc = pq(html)
-    title = doc('.content h1').text()
+    title = doc('.content h1').text().strip()
     content = doc('.newscontent').text()
     date_raw = doc('.send_time h3').text()
     pattern = re.compile('发布日期：(.*?)内容来源于.*?',re.S)
