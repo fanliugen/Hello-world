@@ -47,19 +47,47 @@ def parse_one_page(html):
     #         'link':item[0]
     #     }
     # return items
+def article_writeToMongo(item):
+    client = pymongo.MongoClient(host='localhost',port=27017)
+    db= client['penshaji']
+    collection = db.article
+    resule = collection.insert_one(item)
+
+
+def parse_detail_page(html):
+    doc = pq(html)
+    title = doc('.content h1').text()
+    content = doc('.newscontent').text()
+    date_raw = doc('.send_time h3').text()
+    pattern = re.compile('发布日期：(.*?)内容来源于.*?',re.S)
+    date = re.findall(pattern,date_raw)[0].strip()
+
+    item= {
+        'title':title,
+        'content':content,
+        'date':date
+    }
+    article_writeToMongo(item)
+
+
 def main(page):
     url = 'http://www.psj666.com/news_gsxwck6/p/%s/' % (page)
     print('============'+url)
     html = get_one_page(url)
     items=parse_one_page(html)
     for item in items:
-        # print(item)
-        #save to file 方法
-        # with open('penshaji.txt','a',encoding='utf-8') as file:
-        #     file.write(json.dumps(item,ensure_ascii=False)+'\n')
-
-        #save to mongodb方法
-        writetoMongo(item)
+        response = requests.get(item['link'])
+        if response.status_code == 200:
+            html = response.text
+            parse_detail_page(html)
+    # for item in items:
+    #     print(item)
+    #     #save to file 方法
+    #     with open('penshaji.txt','a',encoding='utf-8') as file:
+    #         file.write(json.dumps(item,ensure_ascii=False)+'\n')
+    #
+    #     #save to mongodb方法
+    #     writetoMongo(item)
 
     # print(html)
     # with open('html','a',encoding='utf-8') as file:
